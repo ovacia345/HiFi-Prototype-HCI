@@ -404,16 +404,36 @@ public class DrawPanel extends JPanel {
 	public void addImage( int xCor, int yCor ) {		
 		JFileChooser chooser = new JFileChooser();
 		chooser.setCurrentDirectory( new File( "." ) );
-		chooser.setDialogTitle( "Choose Image!" );
 		chooser.setFileSelectionMode( JFileChooser.FILES_AND_DIRECTORIES );
 		chooser.setAcceptAllFileFilterUsed( false );
 		
-		if( chooser.showOpenDialog( null ) == JFileChooser.APPROVE_OPTION ) {
-			try {
-				String imagePath = chooser.getSelectedFile().getCanonicalPath();
-				shapesList.add( new MyPicture( ImageIO.read( new File( imagePath ) ), xCor, yCor, this ) );
-			} catch ( IOException e ) {
-				e.printStackTrace();
+		boolean changedPicture = false;
+		
+		for ( int i = shapesList.size() - 1; i >= 0; i-- ) {
+			if ( shapesList.get( i ) instanceof MyPicture && shapesList.get( i ).contains( xCor, yCor ) ) {
+				chooser.setDialogTitle( "Change Image!" );
+				if( chooser.showOpenDialog( null ) == JFileChooser.APPROVE_OPTION ) {
+					try {
+						String imagePath = chooser.getSelectedFile().getCanonicalPath();
+						( (MyPicture) shapesList.get( i ) ).changePicture( ImageIO.read( new File( imagePath ) ) );
+					} catch ( IOException e ) {
+						e.printStackTrace();
+					}
+				}
+				changedPicture = true;
+				break;
+			}
+		}
+		
+		if( !changedPicture ) {
+			chooser.setDialogTitle( "Choose Image!" );
+			if( chooser.showOpenDialog( null ) == JFileChooser.APPROVE_OPTION ) {
+				try {
+					String imagePath = chooser.getSelectedFile().getCanonicalPath();
+					shapesList.add( new MyPicture( ImageIO.read( new File( imagePath ) ), xCor, yCor, this ) );
+				} catch ( IOException e ) {
+					e.printStackTrace();
+				}
 			}
 		}
 		
@@ -436,7 +456,7 @@ public class DrawPanel extends JPanel {
 		
 		for ( int i = shapesList.size() - 1; i >= 0; i-- ) {
 			if ( shapesList.get( i ) instanceof MyText && shapesList.get( i ).contains( xCor, yCor ) ) {
-				String text = JOptionPane.showInputDialog( "New Message:" );
+				String text = JOptionPane.showInputDialog( "Change Message:" );
 				( (MyText) shapesList.get( i ) ).changeText( text );
 				changedText = true;
 				break;
