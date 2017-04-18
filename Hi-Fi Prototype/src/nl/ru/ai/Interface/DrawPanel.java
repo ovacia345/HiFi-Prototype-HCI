@@ -354,8 +354,8 @@ public class DrawPanel extends JPanel {
 		}
 
 		for ( MyPoint p : pointList ) {
-			p.setX( (int) ( ( ( p.getX() - minX ) * xScaler ) ) );
-			p.setY( (int) ( ( ( p.getY() - minY ) * yScaler ) ) );
+			p.setX( ( p.getX() - minX ) * xScaler );
+			p.setY( ( p.getY() - minY ) * yScaler );
 		}
 	}
 	
